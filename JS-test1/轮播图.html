@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+* {
+	margin:0; 
+	padding:0; 
+	}
+li{
+	list-style:none; 
+}
+#div1 {
+	width:850px; 
+	height:500px; 
+	margin:50px auto; 
+    overflow:hidden;
+	position:relative;
+	}
+#div1 ul{
+    width: 8500px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    transition: .5s;
+}    
+#div1 ul li{
+	height:500px;
+    float :left; 
+	transition: 1s;
+	}
+#div1 ul li.ac{
+	z-index: 5;
+	opacity: 1;
+	}
+#div1 ol {
+	position:absolute;
+	right: 15%;
+    top:93%;
+	bottom: 10px;
+	}
+#div1 ol li{
+	width: 20px;
+	height: 20px;
+	background: #fff;
+	margin-left: 5px;
+	float: left;
+	line-height: 20px;
+	text-align: center;
+	cursor: pointer;
+	}
+#div1 ol li.ac{
+	background: red;
+	color: #fff;
+	}
+#div1>a{
+	text-decoration: none;
+	position: absolute;
+	top: 50%;
+	margin-top: -10px;
+	height: 40px;
+	line-height: 32px;
+	text-align: center;
+	width: 40px;
+	font-size: 40px;
+	vertical-align: middle;
+	color: #fff;
+	background: rgba(0,0,0,0.5);
+	}
+#goPrev{
+	left: 0;
+	}
+#goNext{
+	right: 0;
+	}
+img{
+	width:850px;
+	height:500px;
+	}
+</style>
+	</head>
+	<body>
+		<div id="div1">
+			<ul>
+		    	<li class="ac"><a href="javascript:alert(0);"><img src="1.jpg" /></a></li>
+		    	<li><a href="javascript:alert(1);"><img src="2.jpg" /></a></li>
+		    	<li><a href="javascript:alert(2);"><img src="3.jpg" /></a></li>
+		    	<li><a href="javascript:alert(3);"><img src="4.jpg" /></a></li>
+		    	<li><a href="javascript:alert(4);"><img src="5.jpg" /></a></li>
+		    </ul>
+		    <ol>
+		    	<li class="ac">1</li>
+		    	<li>2</li>
+		    	<li>3</li>
+		    	<li>4</li>
+		    	<li>5</li>
+		    </ol>
+		    <a href="javascript:;" id="goPrev">&laquo;</a>
+		    <a href="javascript:;" id="goNext">&raquo;</a>
+		</div>
+		<script type="text/javascript">
+			function Fn (div1) {
+				this.div = document.querySelector(div1);
+                this.ul = this.div.querySelector("ul");
+				this.imgs = this.div.querySelector("ul").querySelectorAll("li");
+				this.btns = this.div.querySelector("ol").querySelectorAll("li");
+				this.goNext = document.getElementById("goNext");//获取到向后的按钮
+				this.goPrev = document.getElementById("goPrev");//获取到向前的按钮
+				this.index = 0;
+				this.timer = null;
+				this.lastIndex = 0;
+				this.bindEvents();
+				//this.init();
+				this.autoplay();
+			}	
+			//给下面的按钮点击事件
+			Fn.prototype.bindEvents = function () {
+				let _this = this;
+				
+				Array.from(this.btns).forEach(function(btn, i){
+					btn.onclick = function (){
+						_this.index = i;
+						//切换的函数名
+						_this.changeImage(i);
+                       
+					}
+				})
+				//console.log(_this.btns);//undefined
+				
+				//向右点击滑动   事件
+				//console.log(this.goNext);//获取this.goNext
+				
+				_this.goNext.onclick = function () {
+					//console.log(_this);//指的是fn全局
+					++_this.index;
+					_this.judgeI(_this.index);
+					_this.changeImage(_this.index);
+				}
+				
+				//向左点击滑动   事件
+				_this.goPrev.onclick = function () {
+					--_this.index;
+					_this.judgeI(_this.index);
+					_this.changeImage(_this.index);
+				}
+						
+				_this.div.onmouseenter = function () {
+					clearInterval(_this.timer);
+				}
+				_this.div.onmouseleave = _this.autoplay.bind(this); 
+				/*function () {
+					console.log(_this.autoplay);
+					_this.autoplay();
+				};*/
+				
+			}
+			
+			//变换图片方法    index是传过来的下标
+			Fn.prototype.changeImage = function (index) {
+				//
+				this.btns[this.lastIndex].classList.remove("ac");
+				this.imgs[this.lastIndex].classList.remove("ac");
+				this.btns[index].classList.add("ac");
+				this.imgs[index].classList.add("ac");
+				this.lastIndex = index;
+                this.ul.style.left = -850 * this.index + "px";
+				//console.log(this);//this指的是fn
+			}
+	
+			//自动播放方法
+			Fn.prototype.autoplay = function () {
+				let _this = this;
+				//console.log(_this);
+				_this.timer = setInterval(function () {
+					_this.goNext.onclick();
+				}, 2000)
+			}
+			
+			Fn.prototype.judgeI = function (i) {
+				if(i === this.btns.length)
+					this.index = 0;
+				if(i < 0) 
+					this.index = this.btns.length -1;
+			}
+			
+			//创建对象
+			new Fn("#div1");
+		</script>
+	</body>
+</html>
