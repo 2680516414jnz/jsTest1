@@ -12,7 +12,7 @@
 	}
 
 /*登录弹框*/
-.openBtn{ 
+#login{ 
 	width:100px; 
 	height:40px; 
 	border:1px solid #ccc; 

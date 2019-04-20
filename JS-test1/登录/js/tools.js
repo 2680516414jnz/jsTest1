@@ -165,19 +165,6 @@ var tools = {
 		center();
 		// 窗口大小发生改变的时候重新计算坐标
 		window.onresize = center;
-	},
-	//阻止默认行为
-	stop : function () {
-		var ul = document.createElement("ul");
-			document.querySelector("div").oncontextmenu = function(e){
-				e = e || event;
-				// 阻止右键默认菜单
-				e.preventDefault ?
-					e.preventDefault() : 
-						window.returnValue = false;
-				ul.innerHTML = "<li>复制</li><li>粘贴</li><li>删除</li>";
-				document.body.appendChild(ul);
-			}
 	}
-	
+
 }
